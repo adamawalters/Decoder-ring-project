@@ -10,42 +10,30 @@ const substitutionModule = (function () {
     // your solution code here
     if( ( !(alphabet) || !(typeof alphabet) === "string") || !(alphabet.length === 26)) return false;
     if(!uniqueString(alphabet)) return false;
-    if(encode) return encodeSubstitution(input, alphabet)
-    return decodeSubstitution(input, alphabet);
-  }
-
-  function encodeSubstitution(input, alphabet) {
-    //map normal alphabet to provided alphabet in an object
-    //iterate through each letter in input and add object[character] to the string, return the string
     input = input.toLowerCase();
+    return encodeSubstitution(input, alphabet, encode)
+  }
+  
+  function encodeSubstitution(input, alphabet, encode) {
+    //map the provided alphabet to normal alphabet
     let map = {};
     const standardAlphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i','j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-    for(let i=0; i<standardAlphabet.length; i++) {
-      const character = standardAlphabet[i];
-      map[character] = alphabet[i];
-    }
-    let result = "";
-    for(let i=0; i<input.length; i++) {
-      const letter = input[i];
-      if(letter === " ") {
-        result += letter;
-      } else {
-      result += map[letter];
+
+    //if you're encoding: map normal letters to other alphabet letters. Otherwise, map other alphabet letters to standard letters
+    if(encode) {
+      for(let i=0; i<standardAlphabet.length; i++) {
+        const letter = standardAlphabet[i];
+        map[letter] = alphabet[i];
       }
+
+    } else {
+      for(let i=0; i<alphabet.length; i++) {
+        const character = alphabet[i];
+        map[character] = standardAlphabet[i];
     }
-    return result;
   }
 
-  function decodeSubstitution(input, alphabet) {
-    //map provided alphabet to normal alphabet
-    //iterate through each character in input and add object[character] to the string, return the string
-    input = input.toLowerCase()
-    let map = {};
-    const standardAlphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i','j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-    for(let i=0; i<alphabet.length; i++) {
-      const character = alphabet[i];
-      map[character] = standardAlphabet[i];
-    }
+    //iterate through each character in input and add the corresponding value of the letter as a key in the map to the string
     let result = "";
     for(let i=0; i<input.length; i++) {
       const letter = input[i];
