@@ -13,19 +13,15 @@ const caesarModule = (function () {
   }
 
   function cipher(input, shift, encode) {
-     //use indexOf. to cipher - iterate through the word, get the index of the letter, then get the cipher letter by using that index + shift on the regular alphabet
-      // to decipher - find the index of the letter and return the letter of the alphabet that's at that index - shift
-      //wrap around - if the index + shift is above 25, subtract 25. if the index + shift is below 25, add 25
-      //if a letter is not in the alphabet, don't shift it
-    //create an alphabet array
-    //loop through the input - for each character, check if it is present in the array. if not, push directly to the return string. if so, encode further
-    //if the character is present in the array - get the index of the character and add the shift value, then push the character at that value to the string (take care of wrap around to make sure number is always 0 - 25)
+
     let alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
     let result = "";
     input = input.toLowerCase();
 
-    if(!encode) shift = shift * -1
+    //if decoding, shift in opposite direction
+    if(!encode) shift = shift * -1 
 
+    //iterate through input - find the shifted index using its existing index + shift. handle overflow by adding or subtracting 26. add the letter at the shifted index to a string & return
     for(let i=0; i<input.length; i++) {
       const letter = input[i];
       if(!alphabet.includes(letter)) {

@@ -29,8 +29,9 @@ describe("polybius", ()=> {
 
         it("should maintain spaces after encoding and then decoding", ()=> {
             let encoded = polybius(" hi th ere ");
-            let decoded = polybius(encoded);
-            expect(encoded).to.equal(decoded);
+            let decoded = polybius(encoded, false);
+            expect(" h(i/j) th ere ").to.equal(decoded);
+            expect(encoded).to.include(" ");
         })
 
     })

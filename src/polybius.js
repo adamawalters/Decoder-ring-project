@@ -6,67 +6,65 @@
 const polybiusModule = (function () {
   // you can add any code you want within this function scope
   
+
   function polybius(input, encode = true) {
     // your solution code here
-  
   input = input.toLowerCase();
-
+  inputArray = input.split("");
   if((!encode) && !(input.split(" ").join("").length % 2 === 0 )) return false; //if we are decoding and the string length without spaces is not even, return false
-
-   if(encode) return encodePolybius(input);
-   return decodePolybius(input);
-
+  if(encode) return encodePolybius(inputArray);
+  return decodePolybius(inputArray);
   }
 
   function encodePolybius(input) {
-    //iterate through each letter and find the index of the letter in the alphabet. 
-    //the row = index / 5. if that value is less than 1, it's row 1. if less than 2, it's row 2. etc
-    // the column = index % 5. this is the difference from the first letter in the row. Then, add 1 to get from 0-indexing to 1-indexing
-    // add these 2 (column & row) to the string
 
-    const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'ij', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-    let result = "";
-
-    for(let i=0; i<input.length; i++) {//iterating through each letter
-      let letter = input[i];
-      if(letter === "i"  || letter === "j") letter = "ij";
-      const letterIndex = alphabet.indexOf(letter) + 1; //not zero indexed. 1 indexed
-      if(letterIndex === 0) { //handling spaces and unfound characters
-        result += letter 
-      } else {
-        const row = Math.ceil(letterIndex / 5);
-        let column = letterIndex % 5;
-        if(column === 0) column = 5;
-        result += column.toString() + row.toString();
-      }
+    //create mapping of letter to number to encode
+    let encodeMapping = {
+      a: "11", b: "21", c : "31", d: "41", e: "51", 
+      f: "12", g: "22", h: "32", i : "42", j: "42", k: "52",
+      l: "13", m: "23", n: "33", o: "43", p: "53", 
+      q: "14", r: "24", s: "34", t: "44", u: "54", 
+      v: "15", w: "25", x: "35", y: "45", z: "55"
     }
 
+    //iterate through input array - for each letter, return the encoded version by referencing the encode mapping - store in a string
+    let result = input.reduce((string, currentLetter) =>{
+      if(currentLetter === " ") return string + currentLetter;
+      return string + encodeMapping[currentLetter];
+    }, "")
+
+    //return the string
     return result;
   }
 
   function decodePolybius(input) {
-    //get first letter (column) and second letter (row)
-    //index in alphabet = ((row * 5) - 6 ) + column
-    //return letter at that index
+    //create mapping of numbers to letters
+    let decodeMapping = {
+      "11": "a", "21": "b", "31" : "c", "41":"d", "51":"e",
+      "12":"f",  "22":"g", "32":"h", "42":"(i/j)", "52":"k",
+      "13": "l", "23":"m", "33":"n", "43":"o", "53":"p", 
+      "14":"q", "24":"r", "34":"s", "44":"t", "54":"u", 
+      "15": "v","25":"w", "35":"x", "45":"y", "55":"z"
+    }
 
-    const alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', '(i/j)', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
     let result = "";
-
+    
+    //iterate through input array - add the relevant mapping of the input to the string (retrieve the decoded value using the input letter)
     for(let i=0; i<input.length; i++) {
-      let letter = input[i];
-      if(letter === " ") {
-        result += letter;
+      if(input[i] === " ") {
+        result += " " 
       } else {
-        const column = Number(letter);
-        const row = Number(input[i+1]);
-        result += alphabet[((row*5) - 6) + column]
-        i++; //go forward an extra character if this was not a space
+      const key = input[i] + input[i+1];
+      result+= decodeMapping[key];
+      i++;
       }
     }
 
+    //return the string with the decoded values
     return result;
 
   }
+  
 
   return {
     polybius,
